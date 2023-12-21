@@ -1,11 +1,11 @@
-use bitflags::bitflags;
 use std::{fmt, mem};
 
 use crate::fraction::Fraction;
 use crate::parameters::Capabilities;
 use crate::v4l_sys::*;
 
-bitflags! {
+bitflags::bitflags! {
+    #[derive(PartialEq, Eq, Hash, Debug, Clone, Copy)]
     pub struct Modes: u32 {
         const HIGH_QUALITY      = 0x1000;
     }
@@ -13,7 +13,7 @@ bitflags! {
 
 impl From<u32> for Modes {
     fn from(caps: u32) -> Self {
-        Self::from_bits_truncate(caps)
+        Self::from_bits_retain(caps)
     }
 }
 

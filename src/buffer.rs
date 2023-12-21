@@ -1,4 +1,3 @@
-use bitflags::bitflags;
 use std::fmt;
 
 use crate::timestamp::Timestamp;
@@ -39,8 +38,8 @@ impl Type {
     }
 }
 
-bitflags! {
-    #[allow(clippy::unreadable_literal)]
+bitflags::bitflags! {
+    #[derive(PartialEq, Eq, Hash, Debug, Clone, Copy)]
     pub struct Flags: u32 {
         /// Buffer is mapped
         const MAPPED                = 0x00000001;
@@ -91,7 +90,7 @@ impl Default for Flags {
 
 impl From<u32> for Flags {
     fn from(flags: u32) -> Self {
-        Self::from_bits_truncate(flags)
+        Self::from_bits_retain(flags)
     }
 }
 
