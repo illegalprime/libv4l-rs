@@ -106,17 +106,21 @@ impl<'a> Arena<'a> {
                 // each plane has to be mapped separately
                 let mut planes = Vec::new();
                 for plane in &v4l2_planes {
+                    let length = if !self.buf_type.planar() {
+                        v4l2_buf.length as usize
+                    } else {
+                        plane.length as usize
+                    };
                     let ptr = v4l2::mmap(
                         ptr::null_mut(),
-                        plane.length as usize,
+                        length,
                         libc::PROT_READ | libc::PROT_WRITE,
                         libc::MAP_SHARED,
                         self.handle.fd(),
                         plane.m.mem_offset as libc::off_t,
                     )?;
-
                     planes.push(slice::from_raw_parts_mut::<u8>(
-                        ptr as *mut u8, plane.length as usize
+                        ptr as *mut u8, length,
                     ));
                 }
 
